@@ -21,7 +21,7 @@ def safeExtGet(prop, fallback) {
 android {
     compileSdkVersion safeExtGet('RfidChainwayR6_compileSdkVersion', 29)
     defaultConfig {
-        minSdkVersion safeExtGet('RfidChainwayR6_minSdkVersion', 16)
+        minSdkVersion safeExtGet('RfidChainwayR6_minSdkVersion', 21)
         targetSdkVersion safeExtGet('RfidChainwayR6_targetSdkVersion', 29)
         versionCode 1
         versionName "1.0"
@@ -56,4 +56,5 @@ repositories {
 dependencies {
     //noinspection GradleDynamicVersion
     implementation "com.facebook.react:react-native:+"  // From node_modules
+    implementation files('./src/main/libs/cwDeviceAPI20210205.jar')
 }
