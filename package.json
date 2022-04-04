@@ -1,6 +1,6 @@
 {
   "name": "react-native-rfid-chainway-r6",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "handle rfid for module chainway r6",
   "main": "lib/commonjs/index",
   "module": "lib/module/index",
