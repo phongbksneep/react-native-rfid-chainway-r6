@@ -12,7 +12,7 @@ npm install react-native-rfid-chainway-r6
 
 ```js
 import RfidChainwayR6 from "react-native-rfid-chainway-r6";
-
+```
 ### Scan devices BLE ###
 
 ```javascript
