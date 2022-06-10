@@ -8,8 +8,6 @@ import android.media.AudioManager;
 import android.media.SoundPool;
 import android.util.Log;
 import android.view.View;
-
-import com.rscja.deviceapi.DeviceConfiguration;
 import com.rscja.utility.StringUtility;
 import com.reactnativerfidchainwayr6.R;
 
@@ -141,18 +139,5 @@ public class Utils {
         }
 
         return false;
-    }
-
-    /**
-     * 判断是否横屏
-     *
-     * @return
-     */
-    public static boolean isLandscape() {
-        String model = DeviceConfiguration.getModel();
-        Log.e(TAG, "model=" + model);
-        return model.contains("P80")
-                || model.contains("A8")
-                || model.equals("CWJ600");
     }
 }

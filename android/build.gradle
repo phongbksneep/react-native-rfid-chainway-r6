@@ -54,7 +54,11 @@ repositories {
 }
 
 dependencies {
+    
     //noinspection GradleDynamicVersion
     implementation "com.facebook.react:react-native:+"  // From node_modules
-    implementation files('./src/main/libs/cwDeviceAPI20210205.jar')
+    // implementation files('./src/main/libs/cwDeviceAPI20210205.jar')
+    implementation files('./src/main/libs/DeviceAPI_ver20220518_release.aar')
+    // implementation files('android\src\main\libs\DeviceAPI_ver20220518_release.aar')
+
 }
