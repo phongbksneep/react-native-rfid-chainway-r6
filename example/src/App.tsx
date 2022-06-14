@@ -33,12 +33,12 @@ function App(props: any) {
   }, [clearFfid]);
 
   // connect sled reader khi didmount
-  // useEffect(() => {
-  //   rfidModule.connectAddress('EA:E2:7C:B8:2E:2F').then(res => {
-  //   // rfidModule.connectAddress('C3:59:65:FB:D6:AC').then(res => {
-  //     setDevicesConnect(res);
-  //   });
-  // }, []);
+  useEffect(() => {
+    rfidModule.connectAddress('EA:E2:7C:B8:2E:2F').then(res => {
+    // rfidModule.connectAddress('C3:59:65:FB:D6:AC').then(res => {
+      setDevicesConnect(res);
+    });
+  }, []);
 
   function renderItemBLE({item, index}) {
     return (
@@ -98,6 +98,7 @@ function App(props: any) {
         style={{flex: 1, width: '100%', marginTop: 20}}
         data={devicesList}
         renderItem={renderItemBLE}
+        keyExtractor={(index) => `device${index}`}
       />
     );
   }, [devicesList]);
@@ -107,6 +108,7 @@ function App(props: any) {
       <FlatList
         style={{flex: 1, width: '100%', marginTop: 20}}
         data={listRFID}
+        keyExtractor={(item, index) => `rfid${index}`}
         renderItem={renderItemRFID}
       />
     );
