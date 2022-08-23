@@ -211,6 +211,27 @@ public class RfidChainwayR6Module extends ReactContextBaseJavaModule {
       uhf.stopScanBTDevices();
     }
 
+    //func stop scan bluetooth devices
+//    @ReactMethod
+//    public void getPowerRFID()
+//    {
+//      return uhf.getPower();
+//    }
+
+    //func set power RFID device
+    @ReactMethod
+    public void setPower(int iPower){
+    int iPow = Integer.valueOf(iPower);
+    //   uhf.setPower(iPow);
+      if(uhf.setPower(iPow)){
+        // Log.e("Minh logg","Set power RFID success!!!" + uhf.setPower(iPow) );
+        Toast.makeText( getCurrentActivity() , "Set power RFID success!!!", Toast.LENGTH_SHORT).show();
+    }else{
+        // Log.e("Minh logg","Set power RFID error, pls try again!!!" + uhf.setPower(iPow) );
+        Toast.makeText( getCurrentActivity() , "Set power RFID error, pls try again!!!", Toast.LENGTH_SHORT).show();
+    }
+    }
+
     // PHẦN ĐỌC RFID
 
     final int FLAG_START = 0;
