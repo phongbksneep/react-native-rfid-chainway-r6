@@ -4,7 +4,10 @@ import {
   View,
   NativeModules,
   TouchableOpacity,
+  TextInput,
   FlatList,
+  Alert,
+  StyleSheet,
   DeviceEventEmitter,
 } from 'react-native';
 
@@ -16,7 +19,7 @@ function App(props: any) {
   const [devicesList, setDevicesList] = useState([]);
   const [listRFID, setListRFID] = useState([]);
   const [clearFfid, setClearRfid] = useState(false);
-
+  const [powerRFID, setPowerRFID] = useState('5')
   //Thêm event listener khi read rfid
   //Khi clear tạo 1 state refresh lại list rfid để listener receive state list
   useEffect(() => {
@@ -72,6 +75,33 @@ function App(props: any) {
         }}>
         <Text>{`${index + 1}. ${item.rfid_tag}`}</Text>
       </TouchableOpacity>
+    );
+  }
+
+  function renderPower() {
+    return (
+      <View>
+        <TextInput
+          style={styles.input}
+          onChangeText={text => setPowerRFID(text)}
+          value={powerRFID}
+          placeholder="Set power RFID..."
+          keyboardType="numeric"
+        />
+        <TouchableOpacity
+          onPress={() => {
+            rfidModule.setPower(Number(powerRFID))
+          }}
+          style={{
+            width: '100%',
+            height: 30,
+            backgroundColor: '#A71',
+            marginHorizontal: 10,
+            marginBottom: 3,
+          }}>
+          <Text>Xác nhận</Text>
+        </TouchableOpacity>
+      </View>
     );
   }
 
@@ -152,8 +182,18 @@ function App(props: any) {
       </View>
       {renderListDevices}
       {renderListRFID}
+      {renderPower()}
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  input: {
+    height: 40,
+    margin: 12,
+    borderWidth: 1,
+    padding: 10,
+  },
+});
 
 export default App;
