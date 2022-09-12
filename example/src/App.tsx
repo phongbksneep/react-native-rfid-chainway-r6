@@ -20,6 +20,8 @@ function App(props: any) {
   const [listRFID, setListRFID] = useState([]);
   const [clearFfid, setClearRfid] = useState(false);
   const [powerRFID, setPowerRFID] = useState('5')
+  const [rfidTagName, setRFIDTagName] = useState('')
+
   //Thêm event listener khi read rfid
   //Khi clear tạo 1 state refresh lại list rfid để listener receive state list
   useEffect(() => {
@@ -104,6 +106,34 @@ function App(props: any) {
       </View>
     );
   }
+  function renderRfidTagName() {
+    return (
+      <View>
+        <TextInput
+          style={styles.input}
+          onChangeText={text => setRFIDTagName(text)}
+          value={rfidTagName}
+          placeholder="Search RFID..."
+          // keyboardType="numeric"
+        />
+        <TouchableOpacity
+          onPress={() => {
+            // rfidModule.setPower(Number(powerRFID))
+            rfidModule.startScanRFIDWithRfid(String(rfidTagName));
+          }}
+          style={{
+            width: '100%',
+            height: 30,
+            backgroundColor: 'gray',
+            marginHorizontal: 10,
+            padding: 10,
+            marginBottom: 3,
+          }}>
+          <Text style = {{color: 'white'}}>Xác nhận</Text>
+        </TouchableOpacity>
+      </View>
+    );
+  }
 
   function renderBTEvent(title: string, color: string, callback: { (): void; (): void; (): void; (): any; (): any; (): any; }) {
     return (
@@ -180,6 +210,7 @@ function App(props: any) {
           }),
         )}
       </View>
+      {renderRfidTagName()}
       {renderListDevices}
       {renderListRFID}
       {renderPower()}
@@ -191,6 +222,7 @@ const styles = StyleSheet.create({
   input: {
     height: 40,
     margin: 12,
+    width: '100%',
     borderWidth: 1,
     padding: 10,
   },

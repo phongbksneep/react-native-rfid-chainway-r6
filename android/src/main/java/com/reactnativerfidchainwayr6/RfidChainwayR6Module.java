@@ -49,6 +49,7 @@ public class RfidChainwayR6Module extends ReactContextBaseJavaModule {
     private List<MyDevice> deviceList = new ArrayList<>();
     BTStatus btStatus = new BTStatus();
     private String devicesConnect = "";
+    private String rfidSearch = "";
     public boolean isSupportRssi=false;
     public boolean isScanning = false;
     private List<UHFTAGInfo> tempDatas = new ArrayList<>();
@@ -74,7 +75,11 @@ public class RfidChainwayR6Module extends ReactContextBaseJavaModule {
                             if (isScanning) {
                                 stop();
                             } else {
-                                startScanRFID();
+                                if(rfidSearch != null && rfidSearch.length() > 0){
+                                    startScanRFIDWithRfid(rfidSearch);
+                                }else{
+                                    startScanRFID();
+                                }
                             }
                         }else{
                             if (isScanning) {
@@ -224,10 +229,10 @@ public class RfidChainwayR6Module extends ReactContextBaseJavaModule {
     int iPow = Integer.valueOf(iPower);
     //   uhf.setPower(iPow);
       if(uhf.setPower(iPow)){
-        // Log.e("Minh logg","Set power RFID success!!!" + uhf.setPower(iPow) );
+        Log.e("Minh logg","Set power RFID success!!!" + uhf.setPower(iPow) );
         Toast.makeText( getCurrentActivity() , "Set power RFID success!!!", Toast.LENGTH_SHORT).show();
     }else{
-        // Log.e("Minh logg","Set power RFID error, pls try again!!!" + uhf.setPower(iPow) );
+        Log.e("Minh logg","Set power RFID error, pls try again!!!" + uhf.setPower(iPow) );
         Toast.makeText( getCurrentActivity() , "Set power RFID error, pls try again!!!", Toast.LENGTH_SHORT).show();
     }
     }
@@ -343,19 +348,53 @@ public class RfidChainwayR6Module extends ReactContextBaseJavaModule {
               msg.arg1 = FLAG_FAIL;
               isScanning=false;
           }
+        //   rfidSearch
           handler.sendMessage(msg);
           while (isScanning) {
               List<UHFTAGInfo> list = getUHFInfo();
               if(list==null || list.size()==0){
                   SystemClock.sleep(1);
               }else{
-                  Utils.playSound(1);
-                  handler.sendMessage(handler.obtainMessage(FLAG_UHFINFO_LIST, list));
+                if(rfidSearch != null && rfidSearch.length() >0){
+                    for( int i=0; i<list.size(); i++){
+                        if( rfidSearch.equals(list.get(i).getEPC()) ){
+                            // Log.e("Minh logg","TRUE" );
+                            Utils.playSound(1);
+                            handler.sendMessage(handler.obtainMessage(FLAG_UHFINFO_LIST, list));
+                        }
+                    }
+                }else{
+                    Utils.playSound(1);
+                    handler.sendMessage(handler.obtainMessage(FLAG_UHFINFO_LIST, list));
+                    // Log.e("Minh logg","FALSE" );
+                }
               }
           }
           stopInventory();
       }
     }
+    class TagThreadWithRfidTag extends Thread {
+        public void run() {
+            Message msg = handler.obtainMessage(FLAG_START);
+            if (uhf.startInventoryTag()) {
+                msg.arg1 = FLAG_SUCCESS;
+            } else {
+                msg.arg1 = FLAG_FAIL;
+                isScanning=false;
+            }
+            handler.sendMessage(msg);
+            while (isScanning) {
+                List<UHFTAGInfo> list = getUHFInfo();
+                if(list==null || list.size()==0){
+                    SystemClock.sleep(1);
+                }else{
+                    Utils.playSound(1);
+                    handler.sendMessage(handler.obtainMessage(FLAG_UHFINFO_LIST, list));
+                }
+            }
+            stopInventory();
+        }
+      }
 
     //Func start read rfid call từ js
     @ReactMethod
@@ -364,6 +403,15 @@ public class RfidChainwayR6Module extends ReactContextBaseJavaModule {
       new TagThread().start();
     }
 
+    //Func start read rfid call từ js
+    @ReactMethod
+    public void startScanRFIDWithRfid(String rfid) {
+      rfidSearch = rfid;
+    //   Log.e("Minh logg","Start scan RFID with rfid_tag " + rfidSearch );
+    //   Toast.makeText( getCurrentActivity() , "scan RFID with rfid_tag" + rfidSearch, Toast.LENGTH_SHORT).show();
+      isScanning = true;
+      new TagThread().start();
+    }
     //Func clear rfid call từ js
     @ReactMethod
     private void clearData(final Promise promise) {
